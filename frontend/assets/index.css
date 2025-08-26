@@ -1,0 +1,22 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+:root {
+  color-scheme: light dark;
+
+  --background-color: light-dark(#f8f8f8, #0f0f0f);
+}
+
+body {
+  font-family: Montserrat, sans-serif;
+  background-color: var(--background-color);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
