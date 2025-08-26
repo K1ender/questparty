@@ -57,6 +57,15 @@ func (h *RoomHandler) CreateRoom(c fiber.Ctx) error {
 		slog.ErrorContext(ctx, "Error creating room", "error", err)
 		return response.NewInternalServerErrorResponse(c, "Internal Server Error")
 	}
+	slog.DebugContext(ctx, "Room created", "id", id)
+
+	err = h.roomStorage.JoinRoom(ctx, payload.Username, id)
+	if err != nil {
+		slog.ErrorContext(ctx, "Error joining room", "error", err)
+		return response.NewInternalServerErrorResponse(c, "Internal Server Error")
+	}
+
+	slog.DebugContext(ctx, "Room joined", "username", payload.Username, "roomId", id)
 
 	slog.DebugContext(ctx, "Room created", "id", id)
 	return response.NewOkResponse(c, "Room created", map[string]string{"roomId": id})

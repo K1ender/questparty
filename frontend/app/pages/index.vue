@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-const { public: { apiBase } } = useRuntimeConfig();
+import { useRoomStore } from '~/store/roomStore';
+
 const isLoading = ref(false);
+const roomStore = useRoomStore();
+
+
 async function createRoom() {
     isLoading.value = true;
     try {
-        const data = await fetch(`${apiBase}/api/create`, {
-            method: "POST",
-        });
-        console.log(data);
+        await roomStore.joinRoom("test");
+        navigateTo(`/room/${roomStore.roomId}`);
     } catch (e) {
         console.error(e);
     } finally {
@@ -22,7 +24,7 @@ async function createRoom() {
             <h1>Quest Party</h1>
             <button :disabled="isLoading" @click="createRoom">{{
                 isLoading ? "Creating..." : "Create Room"
-                }}</button>
+            }}</button>
         </div>
     </div>
 </template>

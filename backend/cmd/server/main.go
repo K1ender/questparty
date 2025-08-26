@@ -14,6 +14,7 @@ func main() {
 	inMemoryRoomStorage := storage.NewInMemoryStorage()
 	roomHandlers := handlers.NewRoomHandler(inMemoryRoomStorage)
 
+	// TODO: FULL REWRITE FROM FIBER CUZ 3 VERSION DONT HAVE OFFICIAL MIDDLEWARE FOR WEBSOCKETS
 	app := fiber.New()
 
 	app.Use(cors.New(cors.ConfigDefault))
