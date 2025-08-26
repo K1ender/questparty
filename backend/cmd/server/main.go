@@ -1,18 +1,25 @@
 package main
 
 import (
-	"net/http"
+	"log/slog"
 
 	"github.com/K1ender/questparty/internal/handlers"
 	"github.com/K1ender/questparty/internal/storage"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 func main() {
+	slog.SetLogLoggerLevel(slog.LevelDebug)
 	inMemoryRoomStorage := storage.NewInMemoryStorage()
 	roomHandlers := handlers.NewRoomHandler(inMemoryRoomStorage)
 
-	http.HandleFunc("POST /api/join", roomHandlers.JoinRoom)
-	http.HandleFunc("POST /api/create", roomHandlers.CreateRoom)
+	app := fiber.New()
 
-	http.ListenAndServe(":8080", nil)
+	app.Use(cors.New(cors.ConfigDefault))
+
+	app.Post("/api/join", roomHandlers.JoinRoom)
+	app.Post("/api/create", roomHandlers.CreateRoom)
+
+	app.Listen(":8080")
 }

@@ -1,27 +1,34 @@
 package storage
 
-import "context"
+import (
+	"context"
+)
 
 type RoomStorage interface {
 	JoinRoom(ctx context.Context, username string, roomId string) error
-	CreateRoom(ctx context.Context, username string) (string, error)
+	CreateRoom(ctx context.Context, username string, roomId string) error
 }
 
-type idk any
+type GameState struct {
+	Users []string
+}
 
 type InMemoryStorage struct {
-	Rooms map[string]idk
+	Rooms map[string]GameState
 }
 
 func NewInMemoryStorage() *InMemoryStorage {
-	return &InMemoryStorage{Rooms: make(map[string]idk)}
+	return &InMemoryStorage{Rooms: make(map[string]GameState)}
 }
 
 func (s *InMemoryStorage) JoinRoom(ctx context.Context, username string, roomId string) error {
-	s.Rooms[roomId] = username
+	room := s.Rooms[roomId]
+	room.Users = append(room.Users, username)
+	s.Rooms[roomId] = room
 	return nil
 }
 
-func (s *InMemoryStorage) CreateRoom(ctx context.Context, username string) (string, error) {
-	return "", nil
+func (s *InMemoryStorage) CreateRoom(ctx context.Context, username string, roomId string) error {
+	s.Rooms[roomId] = GameState{}
+	return nil
 }
